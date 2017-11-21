@@ -34,7 +34,7 @@ public class ListActivity extends AppCompatActivity  {
         setSupportActionBar(toolbar);
 
         // Construct the data source
-        ArrayList<Excursion> excursions = new ArrayList<Excursion>();
+        ArrayList<Trip> excursions = new ArrayList<Trip>();
 // Create the adapter to convert the array to views
         ExcursionAdapter adapter = new ExcursionAdapter(this, excursions);
 // Attach the adapter to a ListView
@@ -42,9 +42,9 @@ public class ListActivity extends AppCompatActivity  {
         listView.setAdapter(adapter);
 
 
-        Excursion ex1 = new Excursion(BARCELONA_TITLE, BARCELONA_DESC, "15$", BARCELONA_IMG_NAME);
-        Excursion ex2 = new Excursion(MALDIVE_TITLE, MALDIVE_DESC, "15$", MALDIVE_IMG_NAME);
-        Excursion ex3 = new Excursion(THAILAND_TITLE, THAILAND_DESC, "15$", THAILAND_IMG_NAME);
+        Trip ex1 = new Trip(BARCELONA_TITLE, BARCELONA_DESC, "15$", BARCELONA_IMG_NAME);
+        Trip ex2 = new Trip(MALDIVE_TITLE, MALDIVE_DESC, "15$", MALDIVE_IMG_NAME);
+        Trip ex3 = new Trip(THAILAND_TITLE, THAILAND_DESC, "15$", THAILAND_IMG_NAME);
         adapter.add(ex1);
         adapter.add(ex2);
         adapter.add(ex3);
@@ -89,11 +89,11 @@ public class ListActivity extends AppCompatActivity  {
 
     String rezolveListTitle(String id){
         switch (id){
-            case "0": return BARCELONA_DESC;
-            case "1" :return MALDIVE_DESC;
-            case "2": return THAILAND_DESC;
+            case "0": return BARCELONA_TITLE;
+            case "1" :return MALDIVE_TITLE;
+            case "2": return THAILAND_TITLE;
             default:
-                return BARCELONA_DESC;
+                return BARCELONA_TITLE;
         }
     }
 

@@ -3,16 +3,16 @@ package com.utcluj.laborator_1_android;
 /**
  * Created by Student on 11/21/2017.
  */
-public class Excursion {
+public class Trip {
 
-    String title;
+    private String title;
 
-    String description;
+    private String description;
 
 
-    String price;
+    private String price;
 
-    String imgName;
+    private String imgName;
 
     public String getTitle() {
         return title;
@@ -46,7 +46,7 @@ public class Excursion {
         this.imgName = imgName;
     }
 
-    public Excursion(String title, String description, String price, String imgName) {
+    public Trip(String title, String description, String price, String imgName) {
         this.title = title;
         this.description = description;
         this.price = price;

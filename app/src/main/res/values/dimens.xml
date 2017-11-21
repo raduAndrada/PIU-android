@@ -7,5 +7,6 @@
     <dimen name="username_width">44dp</dimen>
     <dimen name="password_width">44dp</dimen>
     <dimen name="excursion_img_width">500dp</dimen>
-    <dimen name="excursion_img_height">100dp</dimen>
+    <dimen name="excursion_img_height">55dp</dimen>
+    <dimen name="btn_height_small">20dp</dimen>
 </resources>

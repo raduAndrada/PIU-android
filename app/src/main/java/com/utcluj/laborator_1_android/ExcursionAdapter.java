@@ -15,7 +15,7 @@ import java.util.ArrayList;
  */
 public class ExcursionAdapter extends ArrayAdapter {
 
-    public ExcursionAdapter(Context context, ArrayList<Excursion> excursions) {
+    public ExcursionAdapter(Context context, ArrayList<Trip> excursions) {
         super(context,0,excursions);
     }
 
@@ -24,7 +24,7 @@ public class ExcursionAdapter extends ArrayAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // Get the data item for this position
-        Excursion excursion = (Excursion) getItem(position);
+        Trip excursion = (Trip) getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_excursion, parent, false);
@@ -46,9 +46,9 @@ public class ExcursionAdapter extends ArrayAdapter {
         });
 
         // Populate the data into the template view using the data object
-        exDesciption.setText(excursion.description);
-        exTtile.setText(excursion.title);
-        exPrice.setText(excursion.price);
+        exDesciption.setText(excursion.getDescription());
+        exTtile.setText(excursion.getTitle());
+        exPrice.setText(excursion.getPrice());
         exImg.setImageResource(resolveImageView(excursion.getImgName()));
         // Return the completed view to render on screen
         return convertView;
