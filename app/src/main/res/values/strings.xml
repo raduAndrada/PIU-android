@@ -11,4 +11,10 @@
     <string name="password_not_empty">Password must not be empty</string>
     <string name="username_not_empty">Username must not be empty</string>
     <string name="menu_item_title">Offers list</string>
+    <string name="title_activity_list">ListActivity</string>
+    <string name="exTitle">title</string>
+    <string name="exPrice">price</string>
+    <string name="exDescription">description</string>
+    <string name="add_offer">Add offer</string>
+    <string name="remove_offer">Remove Offer</string>
 </resources>

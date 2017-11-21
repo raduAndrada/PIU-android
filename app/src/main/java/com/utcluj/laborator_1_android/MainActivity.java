@@ -1,5 +1,6 @@
 package com.utcluj.laborator_1_android;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -81,6 +82,10 @@ public class MainActivity extends AppCompatActivity {
                         loginMsg.setText(R.string.login_msg_success);
                         loginMsg.setTextColor(Color.GREEN);
                         loginMsg.setVisibility(View.VISIBLE);
+                        Intent intent = new Intent(MainActivity.this, ListActivity.class);
+
+                        startActivity(intent);
+
                     } else {
                         loginMsg.setText(R.string.login_msg_error);
                         loginMsg.setTextColor(Color.RED);
