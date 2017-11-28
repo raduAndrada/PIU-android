@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ListActivity extends AppCompatActivity  {
+public class ListActivity extends AppCompatActivity {
 
     private static final String BARCELONA_TITLE = "Barcelona, 3 nights";
     private static final String BARCELONA_DESC = "A beautiful city";
@@ -36,14 +36,17 @@ public class ListActivity extends AppCompatActivity  {
 
     private static final String DESC_DEFAULT = "Description for the added offer";
 
-    private static final String GO_BACK_TEXT="Please confirm logout intention";
+    private static final String GO_BACK_TEXT = "Please confirm logout intention";
     private static final String CONFIRMATION = "Confirmation";
     private static final String CONFIRM = "Confirm";
     private static final String CANCEL = "Cancel";
-    private static final String SELECTED_EXCURSION_FOR_EXTEND= "selectedExcursion";
+    private static final String SELECTED_EXCURSION_FOR_EXTEND = "selectedExcursion";
 
-    private static final String EXPANSION_COUNTER= "counter";
-    private static final String EXPANSION_TRIP_POSITION= "tripPosition";
+    private static final String EXPANSION_COUNTER = "counter";
+    private static final String EXPANSION_TRIP_POSITION = "tripPosition";
+    private static final String EXPANSION_TRIP_IS_FAVORITE = "tripIsFavorite";
+
+
 
     private ArrayList<Trip> excursions = new ArrayList<Trip>();
 
@@ -52,7 +55,8 @@ public class ListActivity extends AppCompatActivity  {
     private static final Trip ex2 = new Trip(MALDIVE_TITLE, MALDIVE_DESC, "15$", MALDIVE_IMG_NAME);
     private static final Trip ex3 = new Trip(THAILAND_TITLE, THAILAND_DESC, "15$", THAILAND_IMG_NAME);
 
-    private static final Map<Integer,Integer> tripAccessCounterMap = new HashMap<>();
+    private static final Map<Integer, Integer> tripAccessCounterMap = new HashMap<>();
+    private static final Map<Integer, Boolean> tripFavoritesMap = new HashMap<>();
 
     private ExcursionAdapter adapter = null;
 
@@ -91,59 +95,49 @@ public class ListActivity extends AppCompatActivity  {
         tripAccessCounterMap.put(2, 0);
 
 
-
-
-
-
         adapter.notifyDataSetChanged();
         registerForContextMenu(listView);
-listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Intent intent = new Intent(ListActivity.this, ExpandExcursion.class);
-        intent.putExtra(SELECTED_EXCURSION_FOR_EXTEND, excursions.get(position));
-        intent.putExtra(EXPANSION_COUNTER, tripAccessCounterMap.get(position));
-        intent.putExtra(EXPANSION_TRIP_POSITION,position);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(ListActivity.this, ExpandExcursion.class);
+                intent.putExtra(SELECTED_EXCURSION_FOR_EXTEND, excursions.get(position));
+                intent.putExtra(EXPANSION_COUNTER, tripAccessCounterMap.get(position));
+                intent.putExtra(EXPANSION_TRIP_POSITION, position);
 
-        startActivity(intent);
+                startActivityForResult(intent, 0);
+            }
+        });
     }
-});
-    }
-
 
 
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
-    {
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
 // verificăm dacă meniul este creat pentru lista vizată
-        if (v.getId()==R.id.excursionsList)
-        {
+        if (v.getId() == R.id.excursionsList) {
 // identificăm elementul selectat din listă
             AdapterView.AdapterContextMenuInfo info =
-                    (AdapterView.AdapterContextMenuInfo)menuInfo;
+                    (AdapterView.AdapterContextMenuInfo) menuInfo;
             menu.setHeaderTitle(resolveListTitle(String.valueOf(info.position)));
 // încărcăm structura vizuală a meniului
             getMenuInflater().inflate(R.menu.context_menu_trip, menu);
         }
     }
+
     @Override
-    public boolean onContextItemSelected(MenuItem item)
-    {
+    public boolean onContextItemSelected(MenuItem item) {
 // accesarea informației atașate meniului contextual
         AdapterView.AdapterContextMenuInfo info =
-                (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+                (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
 // identificarea elementului selectat din meniu, folosind ID-urile predefinite
-        if(item.getItemId() == R.id.addOfferId)
-        {
+        if (item.getItemId() == R.id.addOfferId) {
 
-            Trip ex = new Trip(excursions.get(info.position).getTitle(),DESC_DEFAULT, "0$", BARCELONA_IMG_NAME);
+            Trip ex = new Trip(excursions.get(info.position).getTitle(), DESC_DEFAULT, "0$", BARCELONA_IMG_NAME);
             excursions.add(ex);
             adapter.add(ex);
             adapter.notifyDataSetChanged();
-        }
-        else if(item.getItemId() == R.id.removeOfferId)
-        {
+        } else if (item.getItemId() == R.id.removeOfferId) {
 
             adapter.remove(excursions.get(info.position));
             excursions.remove(info.position);
@@ -153,40 +147,11 @@ listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
     }
 
 
-
     @Override
-    public	void	onBackPressed()
-    {
+    public void onBackPressed() {
         showAlertDialog();
     }
 
-    private void showAlertDialog(){
-        final AlertDialog.Builder	logoutConfirmation =	new	AlertDialog.Builder(this);
-        logoutConfirmation
-                .setTitle(CONFIRMATION)
-                .setMessage(GO_BACK_TEXT)
-                .setPositiveButton(CONFIRM, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        final Handler handler = new Handler();
-                        handler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-
-                                Intent intent = new Intent(ListActivity.this, MainActivity.class);
-                                startActivity(intent);
-                            }
-                        }, 5000);
-                    }
-                })
-                .setNegativeButton(CANCEL, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
-                .show();
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -213,37 +178,66 @@ listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             adapter.notifyDataSetChanged();
             return true;
         }
-        if(id == R.id.clear_favorits_menu_item_id)
-        {
+        if (id == R.id.clear_favorits_menu_item_id) {
 
+            for (Trip excursion : excursions) {
+                excursion.setIsFavourite(false);
+            }
         }
 
         return super.onOptionsItemSelected(item);
     }
 
     @Override
-    protected	void	onActivityResult(int	requestCode,	int	resultCode,	Intent	data)
-    {
-        if	(requestCode	==	0)	{
-            if(resultCode	==	Activity.RESULT_OK){
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 0) {
+            if (resultCode == Activity.RESULT_OK) {
                 Integer displayedTimesCounter = (Integer) data.getIntExtra(EXPANSION_COUNTER, 0);
                 Integer tripPosition = (Integer) data.getIntExtra(EXPANSION_TRIP_POSITION, 0);
-                tripAccessCounterMap.put(tripPosition,displayedTimesCounter);
+                Boolean isTripFavorite = (Boolean) data.getBooleanExtra(EXPANSION_TRIP_IS_FAVORITE,false);
+                tripAccessCounterMap.put(tripPosition, displayedTimesCounter);
+                excursions.get(tripPosition).setIsFavourite(isTripFavorite);
             }
-            if	(resultCode	==	Activity.RESULT_CANCELED)	{
+            if (resultCode == Activity.RESULT_CANCELED) {
                 // cod	executat	dacă	nu	se	returnează	date
             }
         }
     }
 
-    private String resolveListTitle(String id){
-        switch (id){
-            case "0": return BARCELONA_TITLE;
-            case "1" :return MALDIVE_TITLE;
-            case "2": return THAILAND_TITLE;
+    private String resolveListTitle(String id) {
+        switch (id) {
+            case "0":
+                return BARCELONA_TITLE;
+            case "1":
+                return MALDIVE_TITLE;
+            case "2":
+                return THAILAND_TITLE;
             default:
                 return BARCELONA_TITLE;
         }
+    }
+
+    private void showAlertDialog() {
+        final AlertDialog.Builder logoutConfirmation = new AlertDialog.Builder(this);
+        logoutConfirmation
+                .setTitle(CONFIRMATION)
+                .setMessage(GO_BACK_TEXT)
+                .setPositiveButton(CONFIRM, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        Intent intent = new Intent(ListActivity.this, MainActivity.class);
+                        startActivity(intent);
+
+                    }
+                })
+                .setNegativeButton(CANCEL, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
     }
 
 

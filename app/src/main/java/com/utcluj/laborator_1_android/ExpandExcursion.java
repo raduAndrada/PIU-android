@@ -1,5 +1,7 @@
 package com.utcluj.laborator_1_android;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -13,10 +15,12 @@ public class ExpandExcursion extends AppCompatActivity {
     private static final String SELECTED_EXCURSION_FOR_EXTEND= "selectedExcursion";
     private static final String EXPANSION_COUNTER= "counter";
     private static final String EXPANSION_TRIP_POSITION= "tripPosition";
+    private static final String EXPANSION_TRIP_IS_FAVORITE = "tripIsFavorite";
     private static final String DETAILS_PAGE_DISPLAYED= "Details page displayed: ";
 
     private Integer displayedTimesCounter =  null;
     private Integer tripPosition =  null;
+    private static boolean isFavorite = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +30,7 @@ public class ExpandExcursion extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         final Trip trip =  (Trip) getIntent().getSerializableExtra(SELECTED_EXCURSION_FOR_EXTEND);
+        isFavorite=trip.isFavourite();
         displayedTimesCounter = (Integer) getIntent().getIntExtra(EXPANSION_COUNTER, 0);
         tripPosition = (Integer) getIntent().getIntExtra(EXPANSION_TRIP_POSITION, 0);
 
@@ -34,13 +39,18 @@ public class ExpandExcursion extends AppCompatActivity {
         final TextView exCounter = (TextView) findViewById(R.id.exAccessCounter);
 
         exCounter.setText(DETAILS_PAGE_DISPLAYED + displayedTimesCounter + " times");
-        removeFromFavsBtn.setVisibility(View.GONE);
 
+        if (!isFavorite) {
+            removeFromFavsBtn.setVisibility(View.GONE);
+        }
+        else{
+            addToFavsBtn.setVisibility(View.GONE);
+        }
 
         addToFavsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                trip.setIsFavourite(true);
+                isFavorite = true;
                 addToFavsBtn.setVisibility(View.GONE);
                 removeFromFavsBtn.setVisibility(View.VISIBLE);
             }
@@ -49,7 +59,7 @@ public class ExpandExcursion extends AppCompatActivity {
         removeFromFavsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                trip.setIsFavourite(false);
+                isFavorite = false;
                 addToFavsBtn.setVisibility(View.VISIBLE);
                 removeFromFavsBtn.setVisibility(View.GONE);
             }
@@ -58,5 +68,15 @@ public class ExpandExcursion extends AppCompatActivity {
 
     }
 
+    @Override
+    public	void	onBackPressed()
+    {
+        Intent returnIntent	=	new	Intent();
+        returnIntent.putExtra(EXPANSION_COUNTER, ++displayedTimesCounter);
+        returnIntent.putExtra(EXPANSION_TRIP_POSITION, tripPosition);
+        returnIntent.putExtra(EXPANSION_TRIP_IS_FAVORITE,isFavorite);
+        setResult(Activity.RESULT_OK, returnIntent);
+        finish();
+    }
 
 }
