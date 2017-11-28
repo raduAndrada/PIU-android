@@ -1,18 +1,21 @@
 package com.utcluj.laborator_1_android;
 
+import java.io.Serializable;
+
 /**
  * Created by Student on 11/21/2017.
  */
-public class Trip {
+public class Trip implements Serializable{
 
     private String title;
 
     private String description;
 
-
     private String price;
 
     private String imgName;
+
+    private boolean isFavourite;
 
     public String getTitle() {
         return title;
@@ -44,6 +47,15 @@ public class Trip {
 
     public void setImgName(String imgName) {
         this.imgName = imgName;
+    }
+
+    public boolean isFavourite() {
+        return isFavourite;
+    }
+
+
+    public void setIsFavourite(boolean isFavourite) {
+        this.isFavourite = isFavourite;
     }
 
     public Trip(String title, String description, String price, String imgName) {

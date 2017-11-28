@@ -23,6 +23,11 @@
             android:label="@string/title_activity_list"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
+        <activity
+            android:name=".ExpandExcursion"
+            android:label="@string/title_activity_expand_excursion"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
     </application>
 
 </manifest>

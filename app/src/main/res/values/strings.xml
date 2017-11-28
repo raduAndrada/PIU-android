@@ -19,4 +19,11 @@
     <string name="remove_offer">Remove Offer</string>
     <string name="logout">Sign out</string>
     <string name="return_back">Offers List</string>
+    <string name="menu_item_clear_favorits">Clear favorites</string>
+    <string name="menu_item_reset_list">Reset List</string>
+    <string name="title_activity_expand_excursion">ExpandExcursion</string>
+    <string name="addToFavourits">Add to favorites</string>
+    <string name="addToFavourites">Add to favorites</string>
+    <string name="removeFromFavorites">Remove from Favorites</string>
+    <string name="exCounter">0</string>
 </resources>

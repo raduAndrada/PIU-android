@@ -9,4 +9,5 @@
     <dimen name="excursion_img_width">500dp</dimen>
     <dimen name="excursion_img_height">55dp</dimen>
     <dimen name="btn_height_small">20dp</dimen>
+    <dimen name="btn_height_medium">40dp</dimen>
 </resources>
