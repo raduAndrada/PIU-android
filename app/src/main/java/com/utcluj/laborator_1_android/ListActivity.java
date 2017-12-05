@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.ContextMenu;
@@ -178,13 +177,23 @@ public class ListActivity extends AppCompatActivity {
             adapter.notifyDataSetChanged();
             return true;
         }
-        if (id == R.id.clear_favorits_menu_item_id) {
+        if (id == R.id.clear_favorites_menu_item_id) {
 
             for (Trip excursion : excursions) {
                 excursion.setIsFavourite(false);
             }
         }
+        if(id == R.id.sign_out_btn_id)
+        {
 
+        }
+        if(id == R.id.chat_with_us_btn_id)
+        {
+            Intent intent = new Intent(ListActivity.this, ChatActivity.class);
+
+
+            startActivityForResult(intent, 0);
+        }
         return super.onOptionsItemSelected(item);
     }
 

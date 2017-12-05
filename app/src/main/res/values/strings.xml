@@ -26,4 +26,12 @@
     <string name="addToFavourites">Add to favorites</string>
     <string name="removeFromFavorites">Remove from Favorites</string>
     <string name="exCounter">0</string>
+    <string name="menu_item_clear_favorites">Reset favorites</string>
+    <string name="sign_out">Sign out</string>
+    <string name="menu_item_chat_with_us">Chat with us</string>
+    <string name="title_activity_chat">ChatActivity</string>
+    <string name="saved_username">none</string>
+    <string name="both_designs">Both designs</string>
+    <string name="design_2">Design 2</string>
+    <string name="design_1">Design 1</string>
 </resources>

@@ -1,9 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/sign_out_btn_id"
+        android:title="@string/sign_out"/>
+
     <item
         android:id="@+id/reset_list_menu_item_id"
         android:title="@string/menu_item_reset_list"/>
     <item
-        android:id="@+id/clear_favorits_menu_item_id"
-        android:title="@string/menu_item_clear_favorits"/>
+        android:id="@+id/clear_favorites_menu_item_id"
+        android:title="@string/menu_item_clear_favorites"/>
+
+    <item
+        android:id="@+id/chat_with_us_btn_id"
+        android:title="@string/menu_item_chat_with_us"/>
 </menu>

@@ -1,6 +1,8 @@
 package com.utcluj.laborator_1_android;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,7 +20,8 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String REQUIRED_PASSWORD = "andrada";
     private static final String REQUIRED_USERNAME = "andrada";
-
+    private static final String USERNAME = "username";
+    private static final String SHARED_PREFERENCES = "sharedPreferences";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +88,12 @@ public class MainActivity extends AppCompatActivity {
                                                      usernameEditText.setVisibility(View.GONE);
                                                      passwordEditText.setVisibility(View.GONE);
                                                      signInBtn.setVisibility(View.GONE);
+
+                                                     SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE);
+                                                     SharedPreferences.Editor editor = sharedPref.edit();
+                                                     editor.putString(USERNAME, REQUIRED_USERNAME);
+                                                     editor.commit();
+
                                                      loginMsg.setVisibility(View.GONE);
                                                      final Handler handler = new Handler();
                                                      handler.postDelayed(new Runnable() {
