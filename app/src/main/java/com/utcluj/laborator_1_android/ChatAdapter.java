@@ -44,8 +44,8 @@ public class ChatAdapter extends ArrayAdapter {
 
 
         chatSender.setText(message.getUsername());
-        chatDate.setText(message.getSentTime().toString());
-        chatText.setText(message.getMessage());
+        chatDate.setText(message.getTimestamp().toString());
+        chatText.setText(message.getText());
 
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override

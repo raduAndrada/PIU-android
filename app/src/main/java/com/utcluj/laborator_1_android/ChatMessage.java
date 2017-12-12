@@ -1,17 +1,20 @@
 package com.utcluj.laborator_1_android;
 
-import java.util.Date;
+import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by Student on 12/5/2017.
  */
 public class ChatMessage {
 
-    private Date sentTime;
+    @SerializedName("timestamp")
+    private String timestamp;
 
-    private String message;
+    @SerializedName("text")
+    private String text;
 
-    private String username;
+    @SerializedName("sender")
+    private String sender;
 
     private ChatMessageType type;
 
@@ -19,35 +22,35 @@ public class ChatMessage {
     public ChatMessage() {
     }
 
-    public ChatMessage(String username, String message, Date sentTime, ChatMessageType type) {
-        this.message = message;
-        this.sentTime = sentTime;
-        this.username = username;
+    public ChatMessage(String sender, String message, String sentTime, ChatMessageType type) {
+        this.text = message;
+        this.timestamp = sentTime;
+        this.sender = sender;
         this.type = type;
     }
 
-    public String getMessage() {
-        return message;
+    public String getText() {
+        return text;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setText(String text) {
+        this.text = text;
     }
 
-    public Date getSentTime() {
-        return sentTime;
+    public String getTimestamp() {
+        return timestamp;
     }
 
-    public void setSentTime(Date sentTime) {
-        this.sentTime = sentTime;
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
     }
 
     public String getUsername() {
-        return username;
+        return sender;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUsername(String sender) {
+        this.sender = sender;
     }
 
     public ChatMessageType getType() {

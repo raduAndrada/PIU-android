@@ -2,8 +2,10 @@ package com.utcluj.laborator_1_android;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -18,6 +20,12 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ListActivity extends AppCompatActivity {
 
@@ -45,6 +53,10 @@ public class ListActivity extends AppCompatActivity {
     private static final String EXPANSION_TRIP_POSITION = "tripPosition";
     private static final String EXPANSION_TRIP_IS_FAVORITE = "tripIsFavorite";
 
+    private static final String CGIS_URL ="https://cgisdev.utcluj.ro/moodle/chat-piu/";
+    private static final String USERNAME = "username";
+    private static final String SHARED_PREFERENCES = "sharedPreferences";
+    private static final String PASSWORD = "password";
 
 
     private ArrayList<Trip> excursions = new ArrayList<Trip>();
@@ -70,10 +82,15 @@ public class ListActivity extends AppCompatActivity {
         adapter = new ExcursionAdapter(this, excursions);
         Button signOutBtn = (Button) findViewById(R.id.signOutId);
 
+
+        SharedPreferences sharedPref = ListActivity.this.getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        final String username = sharedPref.getString(USERNAME, "none");
+        final String password = sharedPref.getString(PASSWORD, "none");
+
         signOutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showAlertDialog();
+                showAlertDialog(username, password);
             }
         });
 
@@ -148,7 +165,10 @@ public class ListActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        showAlertDialog();
+        SharedPreferences sharedPref = ListActivity.this.getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        final String username = sharedPref.getString(USERNAME, "none");
+        final String password = sharedPref.getString(PASSWORD, "none");
+        showAlertDialog(username,password);
     }
 
 
@@ -226,7 +246,7 @@ public class ListActivity extends AppCompatActivity {
         }
     }
 
-    private void showAlertDialog() {
+    private void showAlertDialog(final String username, final String password) {
         final AlertDialog.Builder logoutConfirmation = new AlertDialog.Builder(this);
         logoutConfirmation
                 .setTitle(CONFIRMATION)
@@ -235,8 +255,25 @@ public class ListActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-                        Intent intent = new Intent(ListActivity.this, MainActivity.class);
-                        startActivity(intent);
+                        Retrofit retrofit = new Retrofit.Builder()
+                                 .baseUrl(CGIS_URL)
+                                .addConverterFactory(GsonConverterFactory.create())
+                                .build();
+                        AuthenticationService authService = retrofit.create(AuthenticationService.class);
+                        authService.logoutUser(new Credentials(username, password)).enqueue(new Callback<Void>() {
+                            @Override
+                            public void onResponse(Call<Void> call, Response<Void> response) {
+                                Intent intent = new Intent(ListActivity.this, MainActivity.class);
+                                startActivity(intent);
+                            }
+
+                            @Override
+                            public void onFailure(Call<Void> call, Throwable throwable) {
+                                //nothing to be done here
+                                throwable.printStackTrace();
+                            }
+                        });
+
 
                     }
                 })

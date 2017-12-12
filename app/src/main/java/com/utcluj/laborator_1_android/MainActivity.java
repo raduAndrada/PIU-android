@@ -16,12 +16,19 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class MainActivity extends AppCompatActivity {
 
-    private static final String REQUIRED_PASSWORD = "andrada";
-    private static final String REQUIRED_USERNAME = "andrada";
+    private static final String CGIS_URL ="https://cgisdev.utcluj.ro/moodle/chat-piu/";
     private static final String USERNAME = "username";
     private static final String SHARED_PREFERENCES = "sharedPreferences";
+    private static final String PASSWORD = "password";
+    private static final String TOKEN = "token";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,68 +56,94 @@ public class MainActivity extends AppCompatActivity {
         signInBtn.setOnClickListener(new View.OnClickListener() {
                                          @Override
                                          public void onClick(View v) {
-                                             boolean isOk = true;
 
                                              if (usernameEditText.getText() == null || usernameEditText.getText().toString().isEmpty()) {
                                                  usernameErrorField.setTextColor(Color.RED);
                                                  usernameErrorField.setText(R.string.username_not_empty);
                                                  usernameErrorField.setVisibility(View.VISIBLE);
-                                                 isOk = false;
+                                                ;
                                              } else if (usernameEditText.getText().length() <= 2) {
                                                  usernameErrorField.setTextColor(Color.RED);
                                                  usernameErrorField.setVisibility(View.VISIBLE);
-                                                 isOk = false;
+
 
                                              } else {
                                                  usernameErrorField.setVisibility(View.INVISIBLE);
-                                                 isOk = true;
+
                                              }
                                              if (passwordEditText.getText() == null || passwordEditText.getText().toString().isEmpty()) {
                                                  passwordErrorField.setTextColor(Color.RED);
                                                  passwordErrorField.setText(R.string.password_not_empty);
                                                  passwordErrorField.setVisibility(View.VISIBLE);
-                                                 isOk = false;
+
                                              } else if (passwordEditText.getText().length() <= 2) {
                                                  passwordErrorField.setTextColor(Color.RED);
                                                  passwordErrorField.setVisibility(View.VISIBLE);
-                                                 isOk = false;
+
                                              } else {
                                                  passwordErrorField.setVisibility(View.INVISIBLE);
-                                                 isOk = isOk == false ? false : true;
+
                                              }
-                                             if (isOk) {
-                                                 if (usernameEditText.getText().toString().equals(REQUIRED_USERNAME) && passwordEditText.getText().toString().equals(REQUIRED_PASSWORD)) {
-                                                     loginMsg.setText(R.string.login_msg_success);
-                                                     loginMsg.setTextColor(Color.GREEN);
-                                                     loginMsg.setVisibility(View.VISIBLE);
+                                             Retrofit retrofit = new Retrofit.Builder()
+                                                     .baseUrl(CGIS_URL)
+                                                     .addConverterFactory(GsonConverterFactory.create())
+                                                     .build();
+                                             AuthenticationService authService = retrofit.create(AuthenticationService.class);
+                                             authService.loginUser(new Credentials(usernameEditText.getText().toString(), passwordEditText.getText().toString())).enqueue(new Callback<User>() {
 
-                                                     loginProcessBar.setVisibility(View.VISIBLE);
-                                                     usernameEditText.setVisibility(View.GONE);
-                                                     passwordEditText.setVisibility(View.GONE);
-                                                     signInBtn.setVisibility(View.GONE);
 
-                                                     SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE);
-                                                     SharedPreferences.Editor editor = sharedPref.edit();
-                                                     editor.putString(USERNAME, REQUIRED_USERNAME);
-                                                     editor.commit();
+                                                 @Override
+                                                 public void onResponse(Call<User> call, Response<User> response) {
 
-                                                     loginMsg.setVisibility(View.GONE);
-                                                     final Handler handler = new Handler();
-                                                     handler.postDelayed(new Runnable() {
-                                                         @Override
-                                                         public void run() {
+                                                     if(response.isSuccessful()){
 
-                                                             Intent intent = new Intent(MainActivity.this, ListActivity.class);
-                                                             startActivity(intent);
+                                                         loginMsg.setText(R.string.login_msg_success);
+                                                         loginMsg.setTextColor(Color.GREEN);
+                                                         loginMsg.setVisibility(View.VISIBLE);
+
+                                                         loginProcessBar.setVisibility(View.VISIBLE);
+                                                         usernameEditText.setVisibility(View.GONE);
+                                                         passwordEditText.setVisibility(View.GONE);
+                                                         signInBtn.setVisibility(View.GONE);
+
+                                                         SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE);
+                                                         SharedPreferences.Editor editor = sharedPref.edit();
+                                                         editor.putString(USERNAME,usernameEditText.getText().toString());
+                                                         editor.putString(PASSWORD,passwordEditText.getText().toString());
+                                                         editor.putString(TOKEN,response.body().token);
+                                                         editor.commit();
+
+                                                         loginMsg.setVisibility(View.GONE);
+                                                         final Handler handler = new Handler();
+                                                         handler.postDelayed(new Runnable() {
+                                                             @Override
+                                                             public void run() {
+
+                                                                 Intent intent = new Intent(MainActivity.this, ListActivity.class);
+                                                                 //intent.putExtra(PASSWORD,passwordEditText.getText().toString());
+                                                                 startActivity(intent);
+                                                             }
+                                                         }, 5000);
+
+                                                     }
+                                                     else {
+
+                                                             loginMsg.setText(R.string.login_msg_error);
+                                                             loginMsg.setTextColor(Color.RED);
+                                                             loginMsg.setVisibility(View.VISIBLE);
                                                          }
-                                                     }, 5000);
 
-                                                 } else {
+                                                 }
+
+                                                 @Override
+                                                 public void onFailure(Call<User> call, Throwable t) {
                                                      loginMsg.setText(R.string.login_msg_error);
                                                      loginMsg.setTextColor(Color.RED);
                                                      loginMsg.setVisibility(View.VISIBLE);
                                                  }
-                                             }
+                                             });
+
+
                                          }
 
 
